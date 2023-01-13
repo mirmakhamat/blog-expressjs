@@ -1,0 +1,20 @@
+include components/header
+
+section#contact-us.section(style="margin-top: 0")
+  .contact-form.section-bg(style="background-image: url(/images/contact-1-720x480.jpg);min-height: 100vh")
+    .container
+      .row.justify-content-center
+        .col-lg-6.col-md-6.col-xs-12
+          form#contact(action="", method="POST")
+            .row
+              if error
+                .col-md-12
+                  .alert.alert-danger= error
+              .col-md-12
+                fieldset: input#name(name="login", type="text", placeholder="Login", required)
+              .col-md-12
+                fieldset: input#email(name="password", type="password", placeholder="Password", required)
+              .col-lg-12
+                fieldset: button#form-submit.main-button(type="submit") Login
+
+include components/scripts

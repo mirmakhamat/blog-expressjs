@@ -1,0 +1,53 @@
+extends layout
+
+block content
+    section#call-to-action.section.section-bg(style="background-image: url(/images/banner-image-1-1920x500.jpg)")
+        .container
+          .row
+            .col-lg-10.offset-lg-1
+              .cta-content
+                br
+                br
+                h2 Biz bilan <em>bog'lanish</em>
+                p Ut consectetur, metus sit amet aliquet placerat, enim est ultricies ligula
+
+    section#features.section
+        .container
+            .row.text-center
+                .col-lg-6.offset-lg-3
+                    .section-heading
+                        h2 contact <em> info</em>
+                        img(src="/images/line-dec.png")
+                .col-md-4
+                    .icon: i.fa.fa-phone
+                    h5: a(href="#") +1 333 4040 5566
+                    br
+                .col-md-4
+                    .icon: i.fa.fa-envelope
+                    h5: a(href="#") contact@company.com
+                    br
+                .col-md-4
+                    .icon: i.fa.fa-map-marker
+                    h5 212 Barrington Court New York
+
+
+
+    section#contact-us.section(style="margin-top: 0")
+        .container-fluid
+            .row
+                .col-lg-6.col-md-6.col-xs-12
+                    #map: iframe(src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&t=&z=13&ie=UTF8&iwloc=&output=embed", width="100%", height="600px", frameborder="0", style="border: 0", allowfullscreen)
+                .col-lg-6.col-md-6.col-xs-12
+                    .contact-form.section-bg(style="background-image: url(/images/contact-1-720x480.jpg)")
+                        form#contact(action="", method="POST")
+                            .row
+                                .col-md-6.col-sm-12
+                                    fieldset: input#name(name="name", type="text", placeholder="Your Name", required)
+                                .col-md-6.col-sm-12
+                                    fieldset: input#email(name="email", type="text", pattern="[^ @]*@[^ @]*", placeholder="Your Email", required)
+                                .col-md-6.col-sm-12
+                                    fieldset: input#subject(name="subject", type="text", placeholder="Subject")
+                                .col-lg-12
+                                    fieldset: textarea#message(name="message",  placeholder="Message", rows="6" required)
+                                .col-lg-12
+                                    fieldset: button#form-submit.main-button(type="submit") Send Message

@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  //Main Banner Area
+  #top.main-banner
+    video#bg-video(autoplay, muted, loop)
+      source(src='/images/video.mp4', type="video/mp4")
+
+    .video-overlay.header-text
+      .caption
+        h6 Lorem ipsum dolor sit amet
+        h2 Ijtimoiy <em>Blog</em>
+        .main-button
+          a(href="/contact") Biz bilan bog'lanish
+
+  //Blog
+  section#our-classes.section
+    .container
+      .row
+        .col-lg-6.offset-lg-3
+          .section-heading
+            h2 Mashhur <em>Blog postlar</em>
+            img(src="/images/line-dec.png")
+            p Nunc urna sem, laoreet ut metus id, aliquet consequat magna. Sed viverra ipsum dolor, ultricies fermentum massa consequat eu.
+      #tabs.row
+        .col-lg-4
+          ul
+            each blog, i in data
+              li: a(href="#tabs-" + i)= blog.title
+            .main-rounded-button: a(href='/blog') Read More
+        .col-lg-8
+          section.tabs-content
+            each blog, i in data
+              article.ui-tabs-panel.ui-widget-content.ui-corner-bottom(id="tabs-" + i)
+                img(src=blog.img)
+                h4=blog.title
+                p <i class="fa fa-user"></i> #{blog.author.name} &nbsp;|&nbsp; <i class="fa fa-calendar"></i> #{blog.createdAt.toLocaleString()} &nbsp;|&nbsp; <i class="fa fa-comments"></i>  #{blog.comments.length} comments
+                p=blog.text.slice(0, 250)
+                .main-button: a(href="/blog/" + blog._id) Davomini o'qish
+
+  //qanaqdir section
+  section#schedule.section.section-bg(style="background-image: url(/images/about-fullscreen-1-1920x700.jpg)")
+    .container
+      .row
+        .col-lg-6.offset-lg-3
+          .section-heading.dark-bg
+            h2 <em>Biz haqimizda</em> o'qing
+            img(src="/images/line-dec.png")
+            p Nunc urna sem, laoreet ut metus id, aliquet consequat magna. Sed viverra ipsum dolor, ultricies fermentum massa consequat eu.
+      .row
+        .col-lg-12
+          .cta-content.text-center
+            p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore deleniti voluptas enim! Provident consectetur id earum ducimus facilis, aspernatur hic, alias, harum rerum velit voluptas, voluptate enim! Eos, sunt, quidem.
+            p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto nulla quo cum officia laboriosam. Amet tempore, aliquid quia eius commodi, doloremque omnis delectus laudantium dolor reiciendis non nulla! Doloremque maxime quo eum in culpa mollitia similique eius doloribus voluptatem facilis! Voluptatibus, eligendi, illum. Distinctio, non!

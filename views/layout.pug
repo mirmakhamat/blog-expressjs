@@ -1,0 +1,25 @@
+include components/header
+header.header-area.header-sticky(class=path==='blog'?'background-header':'')
+  .container
+    .row
+      .col-12
+        nav.main-nav
+          a.logo(href='/') <em>Ijtimoiy</em> Blog
+          ul.nav
+            li: a(href="/", class=(path === '/' ? 'active' : '')) Bosh sahifa
+            li: a(href='/blog', class=(path === '/blog' ? 'active' : '')) Blog
+            li: a(href='/about', class=(path === '/about' ? 'active' : '')) Biz haqimizda
+            li: a(href='/team', class=(path === '/team' ? 'active' : '')) Mualliflar
+            li: a(href='/contact', class=(path === '/contact' ? 'active' : '')) Aloqa
+          a.menu-trigger
+            span Menu
+
+block content
+
+footer
+  .container
+    .row
+      .col-lg-12
+        p Copyright © 2020 Mirmakhamat - Template by: <a href="https://www.phpjabbers.com/">PHPJabbers.com</a>
+
+include components/scripts

@@ -1,0 +1,99 @@
+mixin usermodal(data)
+    #Modal.modal.fade
+      .modal-dialog
+        form.modal-content(action="", method="POST")
+          .modal-header
+            h3.modal-title.fs-5 User
+            button.btn(type='button' data-bs-dismiss='modal'): i.fa.fa-close
+          .modal-body
+            .row.g-3
+              .col-md-12.mb-2
+                label.form-label(for="nameInput") Ismi
+                input#nameInput.form-control(name="name", type="text", placeholder="Jahon")
+              .col-md-12.mb-2
+                label.form-label(for="mailInput") Email
+                input#mailInput.form-control(name="mail", type="email", placeholder="jahon32@gmail.com", required)
+              .col-md-12.mb-2
+                label.form-label(for="loginInput") Login
+                input#loginInput.form-control(name="login", type="text", placeholder="jahon32", required)
+              .col-md-12.mb-2
+                label.form-label(for="passInput") Parol
+                input#passInput.form-control(name="password", type="password", placeholder="O'ylab toping...", required)
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Bekor qilish
+            button.btn.btn-primary(type='submit') Saqlash
+    #ModalEdit.modal.fade
+      .modal-dialog
+        form.modal-content(action=path + '/update', method="POST")
+          .modal-header
+            h3.modal-title.fs-5 User
+            button.btn(type='button' data-bs-dismiss='modal'): i.fa.fa-close
+          .modal-body
+            .row.g-3
+              .col-md-12.mb-2
+                label.form-label(for="nameInputEdit") Ismi
+                input#nameInputEdit.form-control(name="name", type="text", placeholder="Jahon")
+              .col-md-12.mb-2
+                label.form-label(for="mailInputEdit") Email
+                input#mailInputEdit.form-control(name="mail", type="email", placeholder="jahon32@gmail.com", required)
+              .col-md-12.mb-2
+                label.form-label(for="loginInputEdit") Login
+                input#loginInputEdit.form-control(name="login", type="text", placeholder="jahon32", required)
+              .col-md-12.mb-2
+                label.form-label(for="passInputEdit") Parol
+                input#passInputEdit.form-control(name="password", type="password", placeholder="O'ylab toping...")
+                input(type="hidden", name="_id")
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Bekor qilish
+            button.btn.btn-primary(type='submit') Saqlash
+
+mixin blogmodal(data)
+    #Modal.modal.fade
+      .modal-dialog
+        form.modal-content(action="", method="POST", encType="multipart/form-data")
+          .modal-header
+            h3.modal-title.fs-5 Post
+            button.btn(type='button' data-bs-dismiss='modal'): i.fa.fa-close
+          .modal-body
+            .row.g-3
+              .col-md-12.mb-2
+                label.form-label(for="nameInput") Post Nomi
+                input#nameInput.form-control(name="title", type="text", placeholder="O'ylab toping...", required)
+              .col-md-12.mb-2
+                .form-check.form-switch
+                  input#statusInput.form-check-input(type='checkbox', checked, name="status")
+                  label.form-check-label(for='statusInput') Post holati
+              .col-md-12.mb-2
+                label.form-label(for="nameImg") Rasm tanlang
+                input#nameImg.form-control(name="img", type="file", required)
+              .col-md-12.mb-2
+                label.form-label(for="textArea") Post matni
+                textarea#textArea.form-control(name="text", placeholder="Matningizni kiriting..", required)
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Bekor qilish
+            button.btn.btn-primary(type='submit') Saqlash
+    #ModalEdit.modal.fade
+      .modal-dialog
+        form.modal-content(action=path + '/update', method="POST", encType="multipart/form-data")
+          .modal-header
+            h3.modal-title.fs-5 Post
+            button.btn(type='button' data-bs-dismiss='modal'): i.fa.fa-close
+          .modal-body
+            .row.g-3
+              .col-md-12.mb-2
+                label.form-label(for="nameInput") Post Nomi
+                input#nameInput.form-control(name="title", type="text", placeholder="O'ylab toping...", required)
+              .col-md-12.mb-2
+                .form-check.form-switch
+                  input#statusInput.form-check-input(type='checkbox', checked, name="status")
+                  label.form-check-label(for='statusInput') Post holati
+              .col-md-12.mb-2
+                label.form-label(for="nameImg") Rasm tanlang
+                input#nameImg.form-control(name="img", type="file")
+              .col-md-12.mb-2
+                label.form-label(for="textArea") Post matni
+                textarea#textArea.form-control(name="text", placeholder="Matningizni kiriting..", required)
+                input(type="hidden", name="_id")
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Bekor qilish
+            button.btn.btn-primary(type='submit') Saqlash

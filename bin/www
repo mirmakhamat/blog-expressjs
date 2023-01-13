@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+const app = require('../app');
+const http = require('http');
+const config = require('config');
+const mongoose = require('mongoose');
+
+const port = config.get('serverPort') || 3000
+app.set('port', port);
+
+const server = http.createServer(app);
+
+const start = async () => {
+  try {
+    await mongoose.set('strictQuery', true);
+    await mongoose.connect(config.get('MONGODB_URI'))
+    server.listen(port);
+    console.log(`Server ${port} da ishga tushdi`)
+  } catch (e) {
+    console.error('error', e)
+  }
+}
+
+start();

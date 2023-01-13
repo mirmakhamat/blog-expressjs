@@ -1,0 +1,45 @@
+extends layout
+
+block content
+    section#call-to-action.section.section-bg(style="background-image: url(/images/banner-image-1-1920x500.jpg)")
+        .container
+          .row
+            .col-lg-10.offset-lg-1
+              .cta-content
+                br
+                br
+                h2 Bizning <em> Blog</em>da o'qing
+                p Ut consectetur, metus sit amet aliquet placerat, enim est ultricies ligula
+
+
+
+    section#our-classes.section
+      .container
+        br
+        br
+        .row
+          .col-lg-8
+            if blogs == false
+              p.alert.alert-warning Ma'lumot topilmadi!
+            each blog in blogs
+              section.tabs-content
+                article
+                  img(src=blog.img)
+                  h4=blog.title
+                  p <i class="fa fa-user"></i> #{blog.author.name} &nbsp;|&nbsp; <i class="fa fa-calendar"></i> #{blog.createdAt.toLocaleString()} &nbsp;|&nbsp; <i class="fa fa-comments"></i>  #{blog.comments.length} comments
+                  p= blog.text.slice(0, 250)
+                  .main-button: a(href='/blog/' + blog._id) Continue Reading
+              br
+              br
+          .col-lg-4
+            h5.h5 Qidirish
+            .contact-form
+              form#search_from(name="gs", method="GET", action="#")
+                input.searchText(type="text", name="q", placeholder="type to search...", autocomplete="on")
+            h5.h5 Oxirgi bloglar
+            ul
+              each blog in lastBlogs
+                li
+                  p: a(href="/blog/" + blog._id)= blog.title
+                  small <i class="fa fa-user"></i> #{blog.author.name} &nbsp;|&nbsp; <i class="fa fa-calendar"></i> #{blog.createdAt.toLocaleString()}
+                li: br

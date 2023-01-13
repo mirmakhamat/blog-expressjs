@@ -1,0 +1,85 @@
+mixin blogs(data)
+    table.table.table-hover.mt-3
+        thead: tr
+            th(scope='col') #
+            th(scope='col') Nomi
+            th(scope='col') Muallif
+            th(scope='col') Ko'rilganlar soni
+            th(scope='col') Yaratilgan vaqti
+            th(scope='col') Tahrirlash
+        tbody
+            each blog, i in data
+                tr(style=blog.status?'':'background-color: #f8d7da;color: #b02a37;')
+                    th.align-middle(scope='row')= i+1
+                    td.align-middle: a(href="/blog/" + blog._id, target="_blank")= blog.title
+                    td.align-middle=blog.author.name
+                    td.align-middle=blog.viewed
+                    td.align-middle=blog.createdAt.toLocaleString()
+                    td.align-middle
+                        .d-flex(style="gap: 10px")
+                            button.btn.btn-danger(type="button", data-bs-toggle='modal', data-bs-target='#staticBackdrop', data-id=blog._id ): i.fa.fa-close(data-id=blog._id)
+                            button.btn.btn-info(type="button", data-bs-toggle='modal', data-bs-target='#ModalEdit', data-info=blog): i.fa.fa-pencil(data-info=blog)
+
+mixin users(data)
+    table.table.table-hover.mt-3
+        thead: tr
+            th(scope='col') #
+            th(scope='col') Ismi
+            th(scope='col') Email
+            th(scope='col') Login
+            th(scope='col') Tahrirlash
+        tbody
+            each user, i in data
+                tr
+                    th.align-middle(scope='row')= i+1
+                    td.align-middle=user.name
+                    td.align-middle=user.mail
+                    td.align-middle=user.login
+                    td.align-middle
+                        .d-flex(style="gap: 10px")
+                            button.btn.btn-danger(type="button", data-bs-toggle='modal', data-bs-target='#staticBackdrop', data-id=user._id ): i.fa.fa-close(data-id=user._id)
+                            button.btn.btn-info(type="button", data-bs-toggle='modal', data-bs-target='#ModalEdit', data-info=user): i.fa.fa-pencil(data-info=user)
+
+
+mixin feedbacks(data)
+    table.table.table-hover.mt-3
+        thead: tr
+            th(scope='col') #
+            th(scope='col') Ismi
+            th(scope='col') Email
+            th(scope='col') Mavzusi
+            th(scope='col') Xabar
+            th(scope='col') Yuborilgan vaqti
+        tbody
+            each feedback, i in data
+                tr
+                    th.align-middle(scope='row')= i+1
+                    td.align-middle=feedback.name
+                    td.align-middle=feedback.email
+                    td.align-middle=feedback.subject
+                    td.align-middle=feedback.message
+                    td.align-middle=feedback.createdAt.toLocaleString()
+
+
+mixin comments(data)
+    table.table.table-hover.mt-3
+        thead: tr
+            th(scope='col') #
+            th(scope='col') Blog
+            th(scope='col') Ismi
+            th(scope='col') Email
+            th(scope='col') Mavzusi
+            th(scope='col') Xabar
+            th(scope='col') Yuborilgan vaqti
+            th(scope='col') O'chirish
+        tbody
+            each comment, i in data
+                tr
+                    th.align-middle(scope='row')= i+1
+                    td.align-middle: a(href="/blog/" + comment.blog._id, target="_blank")= comment.blog.title
+                    td.align-middle=comment.name
+                    td.align-middle=comment.email
+                    td.align-middle=comment.subject
+                    td.align-middle=comment.message
+                    td.align-middle=comment.createdAt.toLocaleString()
+                    td: button.btn.btn-danger(type="button", data-bs-toggle='modal', data-bs-target='#staticBackdrop', data-id=comment._id ): i.fa.fa-close(data-id=comment._id)

@@ -1,0 +1,52 @@
+extends layout
+
+block content
+    section#our-classes.section.mt-3
+        .container
+            br
+            br
+            section.tabs-content
+                article
+                    h4=blog.title
+                    p <i class="fa fa-user"></i> #{blog.author.name} &nbsp;|&nbsp; <i class="fa fa-calendar"></i> #{blog.createdAt.toLocaleString()} &nbsp;|&nbsp; <i class="fa fa-comments"></i>  #{blog.comments.length} comments
+                    div: img(src=blog.img)
+                    br
+                    p !{blog.text}
+                    ul.social-icons
+                        li Share this:
+                        li: a(href="#"): i.fa.fa-facebook
+                        li: a(href="#"): i.fa.fa-twitter
+                        li: a(href="#"): i.fa.fa-linkedin
+                        li: a(href="#"): i.fa.fa-behance
+            br
+            br
+            br
+            section.tabs-content
+                .row
+                    .col-md-8
+                        h4 Comments
+                        if blog.comments == false
+                            p Hozircha hech qandan fikrlar yo'q
+                        ul.features-items
+                            each comment in blog.comments
+                                li.feature-item(style="margin-bottom:15px;width: 100%")
+                                    .left-icon: img(src="/images/features-first-icon.png")
+                                    .right-content
+                                            h4 #{comment.name} <small>#{comment.createdAt.toLocaleString()}</small>
+                                            p: em=comment.message
+
+                    .col-md-4
+                        h4 Fikrlaringizni qoldiring
+                        .contact-form
+                            form(action="", method="POST")
+                                .row
+                                    .col-lg-12
+                                        fieldset: input#name(name="name", type="text", placeholder="Ismingiz", required)
+                                    .col-lg-12
+                                        fieldset: input#email(name="email", type="text", pattern="[^ @]*@[^ @]*", placeholder="Email", required)
+                                    .col-lg-12
+                                        fieldset: input#subject(name="subject", type="text", placeholder="Mavzu")
+                                    .col-lg-12
+                                        fieldset: textarea#message(name="message",  placeholder="Xabaringiz", rows="6" required)
+                                    .col-lg-12
+                                        fieldset: button#form-submit.main-button(type="submit") Jo'natish
