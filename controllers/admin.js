@@ -2,7 +2,6 @@ const User = require('../models/user');
 const Blog = require('../models/blog');
 const Feedback = require('../models/feedback');
 const Comments = require('../models/comment');
-const config = require('config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -12,10 +11,10 @@ const create = async (req, res) => {
     if(superAdmin){
         return res.send('admin uje yest');
     }
-    let hashPass = await bcrypt.hash(config.get('password'), 10)
+    let hashPass = await bcrypt.hash(process.env.PASSWORD, 10)
     let newAdmin = await new User({
         name: 'Supper Admin',
-        login: config.get('login'),
+        login: process.env.LOGIN,
         mail: 'supper@admin.man',
         password: hashPass,
         role: 0
@@ -36,7 +35,7 @@ const login = async (req, res) => {
             if(!isValid){
                 return res.render('login', {title: 'Login', error: "Noto'g'ri parol kiritildi!"});
             }
-            const token = jwt.sign({id: user._id}, config.get("secretKey"), {expiresIn: "1d"})
+            const token = jwt.sign({id: user._id}, process.env.SECRET_KEY, {expiresIn: "1d"})
             let url = '/admin/users'
             if(user.role === 1)
                  url = '/user/blogs'
@@ -100,12 +99,23 @@ const deleteUser = async (req, res) => {
     if(req.user.role !== 0) {
         return res.redirect('/admin');
     }
-
     let { id } = req.body
     if(id){
         let user = await User.findOne({_id:id})
         if(user){
-            await User.findByIdAndDelete(id)
+            await User.findByIdAndDelete(id);
+            let blogs = await Blog.find({author: id}).lean();
+            blogs.forEach(async blog => {
+                let b = await Blog.findById(blog);
+                if(fs.existsSync('public' + b.img)){
+                    fs.unlinkSync('public' + b.img);
+                }
+                await Blog.findByIdAndDelete(blog);
+                let comments = await Comments.find({blog});
+                comments.forEach(async comment => {
+                    await Comments.findByIdAndDelete(comment._id);
+                });
+            })
         }
     }
     return res.redirect('/admin/users');
@@ -202,7 +212,10 @@ const deleteBlog = async (req, res) => {
             if(fs.existsSync('public' + blog.img)){
                 fs.unlinkSync('public' + blog.img);
             }
-            await Blog.findByIdAndDelete(id)
+            for (const comment of blog.comments) {
+                await Comments.findByIdAndDelete(comment);
+            }
+            await Blog.findByIdAndDelete(id);
         }
     }
     return res.redirect('/admin/blogs');

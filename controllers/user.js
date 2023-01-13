@@ -1,5 +1,5 @@
 const Blog = require('../models/blog');
-const config = require('config');
+const Comments = require('../models/comment');
 const fs = require('fs');
 const blogs = async (req, res) => {
     if(req.user.role !== 1) {
@@ -29,7 +29,7 @@ const createBlog = async (req, res) => {
         }
         if(!req.files || !req.files.img){
             options.error = "Ma'lumotlar to'liq emas!";
-            return res.render('admin', options);
+            return res.render('user', options);
         }
         if (title && text){
             let file = req.files.img;
@@ -40,10 +40,10 @@ const createBlog = async (req, res) => {
             let newBlog = await new Blog({title, text, status, author: req.user._id, img: `/images/${uniquePreffix}_${file.name}`})
             await newBlog.save()
             options.data = await Blog.find({'author': req.user.id}).populate('author').lean();
-            return res.render('admin', options);
+            return res.render('user', options);
         }
         options.error = "Ma'lumotlar to'liq emas!";
-        return res.render('admin', options);
+        return res.render('user', options);
     } catch (e) {
         console.error('error', e)
         return res.redirect('/user/blogs');
@@ -62,6 +62,9 @@ const deleteBlog = async (req, res) => {
         if(blog){
             if(fs.existsSync('public' + blog.img)){
                 fs.unlinkSync('public' + blog.img);
+            }
+            for (const comment of blog.comments) {
+                await Comments.findByIdAndDelete(comment);
             }
             await Blog.findByIdAndDelete(id)
         }
