@@ -17,7 +17,10 @@ const create = async (req, res) => {
         login: process.env.LOGIN,
         mail: 'supper@admin.man',
         password: hashPass,
-        role: 0
+        role: 0,
+        position: "Manager",
+        desc: "Manager",
+        img: "/images/team-image-1-646x680.jpg"
     })
     await newAdmin.save()
     return res.send('admin yaratildi!')
@@ -66,7 +69,7 @@ const createUser = async (req, res) => {
         if(req.user.role !== 0) {
             return res.redirect('/admin');
         }
-        let { name, login, mail, password } = req.body
+        let { name, login, mail, password, position, desc } = req.body
 
         let users = await User.find({}).lean();
         let options = {
@@ -75,14 +78,32 @@ const createUser = async (req, res) => {
             path: 'users',
             tableName: 'Foydalanuvchilar ro`yhati'
         }
-        if (login && password && name && mail){
+        if(!req.files || !req.files.img){
+            options.error = "Ma'lumotlar to'liq emas!";
+            return res.render('admin', options);
+        }
+        if (login && password && name && mail && position && desc){
             let user = await User.findOne({login});
             if (user){
                 options.error = "Bunday login mavjud!";
                 return res.render('admin', options);
             }
+            let file = req.files.img;
+            let uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            let filepath = process.env.FILE_PATH + `public/images/${uniquePreffix}_${file.name}`;
+            await file.mv(filepath);
+
             const hashPass = await bcrypt.hash(password, 10);
-            let newUser = await new User({login, password: hashPass, name, mail, role: 1});
+            let newUser = await new User({
+                login,
+                password: hashPass,
+                name,
+                mail,
+                role: 1,
+                position,
+                desc,
+                img:`/images/${uniquePreffix}_${file.name}`
+            });
             await newUser.save();
             options.data = await User.find({}).lean()
             return res.render('admin', options)
@@ -104,11 +125,14 @@ const deleteUser = async (req, res) => {
         let user = await User.findOne({_id:id})
         if(user){
             await User.findByIdAndDelete(id);
+            if(fs.existsSync(process.env.FILE_PATH + 'public' + user.img)){
+                fs.unlinkSync(process.env.FILE_PATH + 'public' + user.img);
+            }
             let blogs = await Blog.find({author: id}).lean();
             blogs.forEach(async blog => {
                 let b = await Blog.findById(blog);
-                if(fs.existsSync('public' + b.img)){
-                    fs.unlinkSync('public' + b.img);
+                if(fs.existsSync(process.env.FILE_PATH + 'public' + b.img)){
+                    fs.unlinkSync(process.env.FILE_PATH + 'public' + b.img);
                 }
                 await Blog.findByIdAndDelete(blog);
                 let comments = await Comments.find({blog});
@@ -126,8 +150,8 @@ const updateUser = async (req, res) => {
         if(req.user.role !== 0) {
             return res.redirect('/admin');
         }
-        let { name, login, mail, password, _id } = req.body
-        if (login && _id && name && mail){
+        let { name, login, mail, password, _id, position, desc } = req.body
+        if (login && _id && name && mail && position && desc){
             let user = await User.findOne({_id});
             if (!user){
                 return res.redirect('/admin/users');
@@ -136,9 +160,23 @@ const updateUser = async (req, res) => {
             if(password){
                 upUser.password = await bcrypt.hash(password, 10)
             }
+            if (req.files){
+                if(req.files.img) {
+                    let file = req.files.img;
+                    let uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                    let filepath = process.env.FILE_PATH + `public/images/${uniquePreffix}_${file.name}`;
+                    await file.mv(filepath);
+                    if(fs.existsSync( process.env.FILE_PATH + 'public' + user.img)){
+                        fs.unlinkSync(process.env.FILE_PATH + 'public' + user.img);
+                    }
+                    upUser.img = `/images/${uniquePreffix}_${file.name}`;
+                }
+            }
             upUser.login = login
             upUser.name = name
             upUser.mail = mail
+            upUser.position = position
+            upUser.desc = desc
             upUser.updateAt = Date.now()
             await User.findByIdAndUpdate(user._id, upUser)
         }
@@ -183,7 +221,7 @@ const createBlog = async (req, res) => {
         if (title && text){
             let file = req.files.img;
             let uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            let filepath = `public/images/${uniquePreffix}_${file.name}`;
+            let filepath = process.env.FILE_PATH + `public/images/${uniquePreffix}_${file.name}`;
             await file.mv(filepath);
             status = status?1:0
             let newBlog = await new Blog({title, text, status, author: req.user._id, img: `/images/${uniquePreffix}_${file.name}`})
@@ -209,8 +247,8 @@ const deleteBlog = async (req, res) => {
     if(id){
         let blog = await Blog.findOne({_id:id})
         if(blog){
-            if(fs.existsSync('public' + blog.img)){
-                fs.unlinkSync('public' + blog.img);
+            if(fs.existsSync(process.env.FILE_PATH + 'public' + blog.img)){
+                fs.unlinkSync(process.env.FILE_PATH + 'public' + blog.img);
             }
             for (const comment of blog.comments) {
                 await Comments.findByIdAndDelete(comment);
@@ -240,10 +278,10 @@ const updateBlog = async (req, res) => {
                 if(req.files.img) {
                     let file = req.files.img;
                     let uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-                    let filepath = `public/images/${uniquePreffix}_${file.name}`;
+                    let filepath = process.env.FILE_PATH + `public/images/${uniquePreffix}_${file.name}`;
                     await file.mv(filepath);
-                    if(fs.existsSync('public' + blog.img)){
-                        fs.unlinkSync('public' + blog.img);
+                    if(fs.existsSync(process.env.FILE_PATH + 'public' + blog.img)){
+                        fs.unlinkSync(process.env.FILE_PATH + 'public' + blog.img);
                     }
                     upBlog.img = `/images/${uniquePreffix}_${file.name}`;
                 }

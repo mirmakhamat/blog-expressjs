@@ -34,7 +34,7 @@ const createBlog = async (req, res) => {
         if (title && text){
             let file = req.files.img;
             let uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            let filepath = `public/images/${uniquePreffix}_${file.name}`;
+            let filepath = process.env.FILE_PATH + `public/images/${uniquePreffix}_${file.name}`;
             await file.mv(filepath);
             status = status?1:0
             let newBlog = await new Blog({title, text, status, author: req.user._id, img: `/images/${uniquePreffix}_${file.name}`})
@@ -60,8 +60,8 @@ const deleteBlog = async (req, res) => {
     if(id){
         let blog = await Blog.findOne({_id:id})
         if(blog){
-            if(fs.existsSync('public' + blog.img)){
-                fs.unlinkSync('public' + blog.img);
+            if(fs.existsSync(process.env.FILE_PATH + 'public' + blog.img)){
+                fs.unlinkSync(process.env.FILE_PATH + 'public' + blog.img);
             }
             for (const comment of blog.comments) {
                 await Comments.findByIdAndDelete(comment);
@@ -91,10 +91,10 @@ const updateBlog = async (req, res) => {
                 if(req.files.img) {
                     let file = req.files.img;
                     let uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-                    let filepath = `public/images/${uniquePreffix}_${file.name}`;
+                    let filepath = process.env.FILE_PATH + `public/images/${uniquePreffix}_${file.name}`;
                     await file.mv(filepath);
-                    if(fs.existsSync('public' + blog.img)){
-                        fs.unlinkSync('public' + blog.img);
+                    if(fs.existsSync(process.env.FILE_PATH + 'public' + blog.img)){
+                        fs.unlinkSync(process.env.FILE_PATH + 'public' + blog.img);
                     }
                     upBlog.img = `/images/${uniquePreffix}_${file.name}`;
                 }

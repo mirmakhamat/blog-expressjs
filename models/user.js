@@ -6,6 +6,9 @@ const User = new Schema({
     login: String,
     password: String,
     role: Number,
+    position: String,
+    desc: String,
+    img: String,
     createdAt: {
         type: Date,
         default: Date.now()
