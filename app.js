@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 
 const router = require('./router.js');
 
+require('dotenv').config({path:'./app.env'});
+
 const app = express();
 
 app.use(fileUpload({}));

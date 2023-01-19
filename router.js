@@ -23,4 +23,6 @@ router.use('/user', userRouter);
 router.use('/logout', function(req, res){res.clearCookie('token').redirect('/admin')});
 router.use('/404', function(req, res){res.render('404', {title: 'Sahija mavjud emas!'})});
 
+router.use('*', (req, res)=>{res.redirect('/404')});
+
 module.exports = router
